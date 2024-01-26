@@ -1,6 +1,6 @@
-use crate::algebra::vector::Tuple;
+use crate::algebra::vector::{Point, Vector3};
 
 pub struct Projectile {
-    pub position: Tuple,
-    pub velocity: Tuple,
+    pub position: Point,
+    pub velocity: Vector3,
 }

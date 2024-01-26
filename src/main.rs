@@ -1,4 +1,4 @@
-use crate::algebra::vector::Tuple;
+use crate::algebra::vector::{Point, Vector3};
 use crate::scene::environment::{tick, Environment};
 use crate::scene::projectile::Projectile;
 use log::info;
@@ -12,12 +12,12 @@ fn main() {
 
     info!("Initialising scene");
     let mut p = Projectile {
-        position: Tuple::new_point(0, 1, 0),
-        velocity: Tuple::new_vector(1, 1, 0).normalize(),
+        position: Point::new(0, 1, 0),
+        velocity: Vector3::new(1, 1, 0).normalize(),
     };
     let e = Environment {
-        gravity: Tuple::new_vector(0, -0.1, 0),
-        wind: Tuple::new_vector(-0.01, 0, 0),
+        gravity: Vector3::new(0, -0.1, 0),
+        wind: Vector3::new(-0.01, 0, 0),
     };
 
     let mut ticks = 0;

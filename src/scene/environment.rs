@@ -1,9 +1,9 @@
-use crate::algebra::vector::Tuple;
+use crate::algebra::vector::Vector3;
 use crate::scene::projectile::Projectile;
 
 pub struct Environment {
-    pub gravity: Tuple,
-    pub wind: Tuple,
+    pub gravity: Vector3,
+    pub wind: Vector3,
 }
 
 pub fn tick(projectile: &Projectile, environment: &Environment) -> Projectile {
