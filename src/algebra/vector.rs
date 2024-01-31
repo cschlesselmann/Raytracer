@@ -9,11 +9,16 @@ pub struct Vector3 {
     pub z: f32,
 }
 
+#[rustfmt::skip]
 impl_op_ex!(+ |a: &Vector3, b: &Vector3| -> Vector3 { Vector3::new(a.x + b.x, a.y + b.y, a.z + b.z) });
-impl_op_ex!(-|a: &Vector3, b: &Vector3| -> Vector3 { Vector3::new(a.x - b.x, a.y - b.y, a.z - b.z) });
-impl_op_ex!(*|a: &Vector3, b: &f32| -> Vector3 { Vector3::new(a.x * b, a.y * b, a.z * b) });
+#[rustfmt::skip]
+impl_op_ex!(- |a: &Vector3, b: &Vector3| -> Vector3 { Vector3::new(a.x - b.x, a.y - b.y, a.z - b.z) });
+#[rustfmt::skip]
+impl_op_ex!(* |a: &Vector3, b: &f32| -> Vector3 { Vector3::new(a.x * b, a.y * b, a.z * b) });
+#[rustfmt::skip]
 impl_op_ex!(/ |a: &Vector3, b: &f32| -> Vector3 { Vector3::new(a.x / b, a.y / b, a.z / b) });
-impl_op_ex!(-|a: &Vector3| -> Vector3 { Vector3::new(-a.x, -a.y, -a.z) });
+#[rustfmt::skip]
+impl_op_ex!(- |a: &Vector3| -> Vector3 { Vector3::new(-a.x, -a.y, -a.z) });
 
 #[derive(Debug, PartialOrd)]
 pub struct Point {
@@ -22,9 +27,12 @@ pub struct Point {
     pub z: f32,
 }
 
+#[rustfmt::skip]
 impl_op_ex!(+ |a: &Point, b: &Vector3| -> Point { Point::new(a.x + b.x, a.y + b.y, a.z + b.z) });
-impl_op_ex!(-|a: &Point, b: &Vector3| -> Point { Point::new(a.x - b.x, a.y - b.y, a.z - b.z) });
-impl_op_ex!(-|a: &Point, b: &Point| -> Vector3 { Vector3::new(a.x - b.x, a.y - b.y, a.z - b.z) });
+#[rustfmt::skip]
+impl_op_ex!(- |a: &Point, b: &Vector3| -> Point { Point::new(a.x - b.x, a.y - b.y, a.z - b.z) });
+#[rustfmt::skip]
+impl_op_ex!(- |a: &Point, b: &Point| -> Vector3 { Vector3::new(a.x - b.x, a.y - b.y, a.z - b.z) });
 
 impl PartialEq for Vector3 {
     fn eq(&self, other: &Self) -> bool {
@@ -93,7 +101,10 @@ mod tests {
 
     #[ctor]
     fn foo() {
-        SimpleLogger::new().with_level(LevelFilter::Trace).init().unwrap();
+        SimpleLogger::new()
+            .with_level(LevelFilter::Trace)
+            .init()
+            .unwrap_or_else(|e| println!("[{}] {}", module_path!(), e));
     }
 
     #[test]

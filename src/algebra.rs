@@ -1,2 +1,4 @@
 pub mod utils;
-pub mod vector;
+mod vector;
+
+pub use vector::*;

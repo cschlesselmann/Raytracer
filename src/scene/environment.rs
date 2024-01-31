@@ -1,4 +1,4 @@
-use crate::algebra::vector::Vector3;
+use crate::algebra::Vector3;
 use crate::scene::projectile::Projectile;
 
 pub struct Environment {

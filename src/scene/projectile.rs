@@ -1,4 +1,4 @@
-use crate::algebra::vector::{Point, Vector3};
+use crate::algebra::{Point, Vector3};
 
 pub struct Projectile {
     pub position: Point,

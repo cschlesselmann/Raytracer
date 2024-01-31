@@ -1,32 +1,70 @@
-use crate::algebra::vector::{Point, Vector3};
-use crate::scene::environment::{tick, Environment};
-use crate::scene::projectile::Projectile;
-use log::info;
 use simple_logger::SimpleLogger;
+use std::num::NonZeroU32;
+use std::rc::Rc;
+use winit::event::{Event, KeyEvent, WindowEvent};
+use winit::event_loop::{ControlFlow, EventLoop};
+use winit::keyboard::{Key, NamedKey};
+use winit::window::WindowBuilder;
 
 mod algebra;
+mod rendering;
 mod scene;
 
 fn main() {
     SimpleLogger::new().init().unwrap();
 
-    info!("Initialising scene");
-    let mut p = Projectile {
-        position: Point::new(0, 1, 0),
-        velocity: Vector3::new(1, 1, 0).normalize(),
-    };
-    let e = Environment {
-        gravity: Vector3::new(0, -0.1, 0),
-        wind: Vector3::new(-0.01, 0, 0),
-    };
+    let event_loop = EventLoop::new().unwrap();
+    let window = Rc::new(WindowBuilder::new().build(&event_loop).unwrap());
 
-    let mut ticks = 0;
-    while p.position.y > 0.0 {
-        info!("Position before tick {}: {:?}", ticks, p.position);
-        p = tick(&p, &e);
-        info!("Position after tick {}: {:?}", ticks, p.position);
-        ticks += 1;
-    }
+    let context = softbuffer::Context::new(window.clone()).unwrap();
+    let mut surface = softbuffer::Surface::new(&context, window.clone()).unwrap();
 
-    info!("Took {} ticks to reach the ground", ticks)
+    event_loop
+        .run(move |event, elwt| {
+            elwt.set_control_flow(ControlFlow::Wait);
+
+            match event {
+                Event::WindowEvent {
+                    window_id,
+                    event: WindowEvent::RedrawRequested,
+                } if window_id == window.id() => {
+                    if let (Some(width), Some(height)) = {
+                        let size = window.inner_size();
+                        (NonZeroU32::new(size.width), NonZeroU32::new(size.height))
+                    } {
+                        surface.resize(width, height).unwrap();
+
+                        let mut buffer = surface.buffer_mut().unwrap();
+                        for y in 0..height.get() {
+                            for x in 0..width.get() {
+                                let red = x % 255;
+                                let green = y % 255;
+                                let blue = (x * y) % 255;
+                                let index = y as usize * width.get() as usize + x as usize;
+                                buffer[index] = blue | (green << 8) | (red << 16);
+                            }
+                        }
+
+                        buffer.present().unwrap();
+                    }
+                }
+                Event::WindowEvent {
+                    event:
+                        WindowEvent::CloseRequested
+                        | WindowEvent::KeyboardInput {
+                            event:
+                                KeyEvent {
+                                    logical_key: Key::Named(NamedKey::Escape),
+                                    ..
+                                },
+                            ..
+                        },
+                    window_id,
+                } if window_id == window.id() => {
+                    elwt.exit();
+                }
+                _ => {}
+            }
+        })
+        .unwrap();
 }
