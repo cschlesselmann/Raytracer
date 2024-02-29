@@ -8,7 +8,7 @@ edition = "2021"
 
 [dependencies]
 auto_ops = "0.3.0"
-log = "0.4.20"
+log = "0.4.21"
 simple_logger = "4.3.3"
 ctor = "0.2.6"
 winit = "0.29.10"
